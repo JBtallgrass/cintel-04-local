@@ -10,7 +10,7 @@ ____________________________________________________
 + Script: 
 ____________________________________________________
 ### Objective
-1. succesfful install of latest Python version 3.12.2
+1. Successful install of latest Python version 3.12.2
 2. Python was installed in Datafun, required upgrade in the Cintel course
 
 
