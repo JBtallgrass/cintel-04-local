@@ -15,4 +15,4 @@ dash-bootstrap-components
 scikit-learn
 jupyterlab
 bokeh
-holoview
+
