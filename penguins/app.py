@@ -6,6 +6,7 @@ import pandas as pd
 import seaborn as sns
 import palmerpenguins  # This package provides the Palmer Penguins dataset
 from shiny import reactive
+import matplotlib.pyplot as plt
 
 # built-in function to load the Palmer Penguins dataset
 penguins_df = palmerpenguins.load_penguins()
@@ -115,25 +116,30 @@ with ui.layout_columns():
             )
 
     # Creates a Seaborn Histogram showing all species
-
+with ui.layout_column():
     with ui.card(full_screen=True):
         ui.card_header("Seaborn Histogram")
 
         palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
 
+       
         @render.plot(alt="Seaborn Histogram")
         def seaborn_histogram():
-            histplot = sns.histplot(
+            fig, ax = plt.subplots()  # Create a Matplotlib figure and axes
+            sns.histplot(
                 filtered_data(),
                 x="body_mass_g",
                 bins=input.seaborn_bin_count(),
                 hue="species",
                 palette=palette,
-            )
-            histplot.set_title("Palmer Penguins")
-            histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
-            histplot.set_ylabel("Count")  # Set y-axis label
-            return histplot
+                ax=ax  # Pass the Matplotlib axes to Seaborn
+    )
+            ax.set_title("Palmer Penguins")  # Set the title using the Matplotlib axes
+            ax.set_xlabel("Body Mass (g)")  # Set the x-axis label
+            ax.set_ylabel("Count")  # Set the y-axis label
+            return fig  # Return the Matplotlib figure object
+      
+   
 
     with ui.card(full_screen=True):
         ui.h3("Penguin Population by Island")
