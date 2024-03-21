@@ -49,7 +49,7 @@ with ui.sidebar(open="open"):
 
     # Use ui.input_checkbox_group() to create a checkbox group input to filter the islands
     ui.input_checkbox_group(
-        "selected_islands",
+        "selected_island_list",
         "Islands in Graphs",
         ["Torgersen", "Biscoe", "Dream"],
         selected=["Torgersen", "Biscoe", "Dream"],
@@ -67,20 +67,21 @@ ui.a(
 )
 
 # Data table showing the penguin dataset Include 2 cards with a table and a grid
-with ui.layout_columns(col_widths=(4, 8)):
+with ui.layout_columns():
     with ui.card(full_screen=True):  # Full screen option
         ui.h3("Penguins Data Table")
 
         @render.data_frame
         def render_penguins_table():
-            return filtered_data()
+            return render.DataTable(filtered_data())
 
+# Create data grid
     with ui.card(full_screen=True):
         ui.h3("Penguins Data Grid")
 
         @render.data_frame
         def render_penguins_grid():
-            return filtered_data()
+            return render.DataGrid(filtered_data())
 
 
 # Use ui.hr() to add a horizontal rule to the sidebar
@@ -94,10 +95,10 @@ with ui.layout_columns():
         @render_plotly
         def plotly_histogram():
             return px.histogram(
-                filtered_data(),
-                x="species",
-                color="species",
-                color_discrete_map=color_map,
+            filtered_data(),
+            x="species",
+            color="species",
+            color_discrete_map=color_map,
             )
 
     with ui.card(full_screen=True):
@@ -105,8 +106,7 @@ with ui.layout_columns():
 
         @render_plotly
         def plotly_scatterplot():
-            return px.scatter(
-                filtered_data(),
+            return px.scatter(filtered_data(),
                 title="All Species ScatterPlot-plotly",
                 x="body_mass_g",
                 y="bill_length_mm",
@@ -114,32 +114,21 @@ with ui.layout_columns():
                 symbol="species",
                 color_discrete_map=color_map,
             )
-
     # Creates a Seaborn Histogram showing all species
-with ui.layout_column():
+
     with ui.card(full_screen=True):
         ui.card_header("Seaborn Histogram")
 
         palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
 
-       
         @render.plot(alt="Seaborn Histogram")
         def seaborn_histogram():
-            fig, ax = plt.subplots()  # Create a Matplotlib figure and axes
-            sns.histplot(
-                filtered_data(),
-                x="body_mass_g",
-                bins=input.seaborn_bin_count(),
-                hue="species",
-                palette=palette,
-                ax=ax  # Pass the Matplotlib axes to Seaborn
-    )
-            ax.set_title("Palmer Penguins")  # Set the title using the Matplotlib axes
-            ax.set_xlabel("Body Mass (g)")  # Set the x-axis label
-            ax.set_ylabel("Count")  # Set the y-axis label
-            return fig  # Return the Matplotlib figure object
-      
-   
+          histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count(), hue="species", palette=palette)
+          histplot.set_title("Palmer Penguins")
+          histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
+          histplot.set_ylabel("Count")  # Set y-axis label
+          return histplot
+     
 
     with ui.card(full_screen=True):
         ui.h3("Penguin Population by Island")
